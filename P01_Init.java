@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
@@ -65,7 +66,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0119_1000TimesSorry"),
                 input(SOURCE_AB, "S0144_EnumConstructors"),
                 input(SOURCE_AB, "S0148_CustomIterableForEach"),
-                input(SOURCE_AB, "0170_Clock"));
+                input(SOURCE_AB, "S0170_Clock"));
         copy(in);
     }
 
@@ -90,6 +91,7 @@ interface P01_Init {
             // Write modified content to file
             Files.writeString(Path.of(dstFilename + ".java"), content, StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
+            System.getLogger("main").log(Level.INFO, "Copied {0} to {1}",in.filename, dstFilename);
             i++;
         }
 
