@@ -2,15 +2,15 @@
 import static java.util.Optional.ofNullable;
 
 interface S19_AttributeDefaultOptional {
-  
+
   class Developer {
     private String name;
     private String language;
 
     public Developer(String name, String language) {
       this.name = ofNullable(name)
-      .map(String::toUpperCase)
-      .orElse("duke");
+          .map(String::toUpperCase)
+          .orElse("duke");
       this.language = ofNullable(language).orElse("j");
     }
 

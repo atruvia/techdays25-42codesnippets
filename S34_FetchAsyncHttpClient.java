@@ -16,7 +16,7 @@ interface S34_FetchAsyncHttpClient {
       var req = HttpRequest.newBuilder(uri)
           .GET()
           .build();
-       httpClient
+      httpClient
           .sendAsync(req, BodyHandlers.ofString())
           .thenApply(HttpResponse::body)
           .thenAccept(S34_FetchAsyncHttpClient::onFetch);

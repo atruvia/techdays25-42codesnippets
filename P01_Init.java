@@ -91,7 +91,7 @@ interface P01_Init {
             // Write modified content to file
             Files.writeString(Path.of(dstFilename + ".java"), content, StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
-            System.getLogger("main").log(Level.INFO, "Copied {0} to {1}",in.filename, dstFilename);
+            System.getLogger("main").log(Level.INFO, "Copied {0} to {1}", in.filename, dstFilename);
             i++;
         }
 

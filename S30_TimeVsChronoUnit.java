@@ -9,5 +9,6 @@ interface S30_TimeVsChronoUnit {
     var tu = TimeUnit.SECONDS;
     tu.sleep(2);
     var cu = ChronoUnit.SECONDS;
+    // no sleep with cu
   }
 }

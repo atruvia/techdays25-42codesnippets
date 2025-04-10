@@ -5,7 +5,7 @@ import java.io.IOException;
 
 interface S27_FileCopy {
   static void main(String... args) throws IOException {
-    Files.copy(of("App.java"), of("App.next"));
+    Files.copy(of("Readme.md"), of("ReadmeAsWell.md"));
   }
 
 }
