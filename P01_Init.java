@@ -95,8 +95,7 @@ interface P01_Init {
                     var contentCurrentFile = new String(inCurrentfile.readAllBytes(),
                             java.nio.charset.StandardCharsets.UTF_8);
                     // remove source info on line one (with timestamp)
-                    contentCurrentFile = contentCurrentFile.lines().skip(1)
-                            .collect(java.util.stream.Collectors.joining(System.lineSeparator()));
+                    contentCurrentFile = contentCurrentFile.replaceFirst(".*?(\\r?\\n)", "");
                     if (content.equals(contentCurrentFile)) {
                         System.getLogger("main").log(Level.INFO, "No diff in {0}", dstFilename);
                         continue;
