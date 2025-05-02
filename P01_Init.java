@@ -46,7 +46,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0030_CreateTempFolder"),
                 input(SOURCE_AB, "S0032_DirectoryStream"),
                 input(SOURCE_AB, "S0035_LinesString"),
-                input(SOURCE_AB, "S0037_FileCopy"),
+                input(SOURCE_OWN, "FileCopy"),
                 input(SOURCE_AB, "S0039_EndlessStreams"),
                 input(SOURCE_AB, "S0040_SoutRedirect"),
                 input(SOURCE_AB, "S0041_TimeVsChronoUnit"),

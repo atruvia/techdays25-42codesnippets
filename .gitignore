@@ -3,7 +3,8 @@
 
 ### manually added
 log.file
-*CopyTarget.java
+**/*CopyTarget.java
+**/*Copy.md
 
 ### Eclipse ###
 .metadata
