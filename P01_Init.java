@@ -6,9 +6,11 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Stream;
 
 interface P01_Init {
 
@@ -67,8 +69,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0119_1000TimesSorry"),
                 input(SOURCE_AB, "S0144_EnumConstructors"),
                 input(SOURCE_AB, "S0148_CustomIterableForEach"),
-                input(SOURCE_AB, "S0170_Clock")
-                );
+                input(SOURCE_AB, "S0170_Clock"));
         copy(in);
     }
 
@@ -76,7 +77,8 @@ interface P01_Init {
         int i = 0;
         for (Input in : ins) {
             i++;
-            String dstFilename = "S" + "%02d".formatted(i) + "_" + in.filename.replaceFirst("^.*?_", "");
+            String dstFilenamePrefix = "S" + "%02d".formatted(i);
+            String dstFilename = dstFilenamePrefix + "_" + in.filename.replaceFirst("^.*?_", "");
             String dstFilenameWithExt = dstFilename + ".java";
 
             URL url = URI.create(in.prefix + in.filename + ".java").toURL();
@@ -103,6 +105,19 @@ interface P01_Init {
                     System.getLogger("main").log(Level.DEBUG, "Diff found {0}, {1}", contentCurrentFile, content);
                 }
 
+            }
+
+            // Remove other files with intended prefix
+            try (Stream<Path> paths = Files.list(Paths.get("."))) {
+                paths
+                        .filter(p -> Files.isRegularFile(p) && p.getFileName().toString().startsWith(dstFilenamePrefix))
+                        .forEach(p -> {
+                            try {
+                                Files.delete(p);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
             }
 
             // Add source info
