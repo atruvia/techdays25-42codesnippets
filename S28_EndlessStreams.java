@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0039_EndlessStreams.java on 2025-04-10T19:24:02.495422Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0039_EndlessStreams.java on 2025-05-02T12:04:22.284966Z
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 

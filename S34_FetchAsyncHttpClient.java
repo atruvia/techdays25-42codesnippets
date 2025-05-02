@@ -1,4 +1,5 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0059_FetchAsyncHttpClient.java on 2025-04-10T19:24:02.611888Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0059_FetchAsyncHttpClient.java on 2025-05-02T12:04:23.469607Z
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -16,7 +17,7 @@ interface S34_FetchAsyncHttpClient {
       var req = HttpRequest.newBuilder(uri)
           .GET()
           .build();
-      httpClient
+       httpClient
           .sendAsync(req, BodyHandlers.ofString())
           .thenApply(HttpResponse::body)
           .thenAccept(S34_FetchAsyncHttpClient::onFetch);

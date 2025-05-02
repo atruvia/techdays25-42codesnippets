@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0065_ClipboardWasher.java on 2025-04-10T19:24:02.658182Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0065_ClipboardWasher.java on 2025-05-02T12:04:24.057908Z
 
 import java.awt.*;
 import java.awt.datatransfer.*;

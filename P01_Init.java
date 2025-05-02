@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger.Level;
@@ -24,7 +25,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0004_Timer"),
                 input(SOURCE_AB, "S0005_ScheduledThreadPool"),
                 input(SOURCE_AB, "S0006_FileWatch"),
-                // own Clipboard aus Base64 dekodieren
+                // //input(SOURCE_OWN, "Hello"), // update: own Clipboard aus Base64 dekodieren
                 input(SOURCE_AB, "S0010_ReadFromConsole"),
                 input(SOURCE_AB, "S0011_ReadPassword"),
                 input(SOURCE_AB, "S0013_Emoji"), // mit 0079,0083 ergänzen
@@ -66,14 +67,17 @@ interface P01_Init {
                 input(SOURCE_AB, "S0119_1000TimesSorry"),
                 input(SOURCE_AB, "S0144_EnumConstructors"),
                 input(SOURCE_AB, "S0148_CustomIterableForEach"),
-                input(SOURCE_AB, "S0170_Clock"));
+                input(SOURCE_AB, "S0170_Clock")
+                );
         copy(in);
     }
 
     static void copy(List<Input> ins) throws IOException {
-        int i = 1;
+        int i = 0;
         for (Input in : ins) {
+            i++;
             String dstFilename = "S" + "%02d".formatted(i) + "_" + in.filename.replaceFirst("^.*?_", "");
+            String dstFilenameWithExt = dstFilename + ".java";
 
             URL url = URI.create(in.prefix + in.filename + ".java").toURL();
 
@@ -85,14 +89,30 @@ interface P01_Init {
             content = content.replace(in.filename, dstFilename);
             content = content.replaceFirst("(?m)^package\\s+[^;]+;", "");
 
+            // compare new content with content of current file
+            if (Files.exists(Path.of(dstFilenameWithExt))) {
+                try (InputStream inCurrentfile = new FileInputStream(dstFilenameWithExt)) {
+                    var contentCurrentFile = new String(inCurrentfile.readAllBytes(),
+                            java.nio.charset.StandardCharsets.UTF_8);
+                    // remove source info on line one (with timestamp)
+                    contentCurrentFile = contentCurrentFile.lines().skip(1)
+                            .collect(java.util.stream.Collectors.joining(System.lineSeparator()));
+                    if (content.equals(contentCurrentFile)) {
+                        System.getLogger("main").log(Level.INFO, "No diff in {0}", dstFilename);
+                        continue;
+                    }
+                    System.getLogger("main").log(Level.DEBUG, "Diff found {0}, {1}", contentCurrentFile, content);
+                }
+
+            }
+
             // Add source info
             content = "// Copied from " + url + " on " + Instant.now() + System.lineSeparator() + content;
 
             // Write modified content to file
-            Files.writeString(Path.of(dstFilename + ".java"), content, StandardOpenOption.CREATE,
+            Files.writeString(Path.of(dstFilenameWithExt), content, StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
             System.getLogger("main").log(Level.INFO, "Copied {0} to {1}", in.filename, dstFilename);
-            i++;
         }
 
     }

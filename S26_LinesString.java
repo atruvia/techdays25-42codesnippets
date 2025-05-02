@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0035_LinesString.java on 2025-04-10T19:24:02.461668Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0035_LinesString.java on 2025-05-02T12:04:21.849946Z
 public class S26_LinesString {
 
     public static void main(String[] args) {
