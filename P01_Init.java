@@ -30,7 +30,7 @@ interface P01_Init {
                 input(SOURCE_OWN, "JWTClipboardDecoder"), // aus Clipboard JWT Token dekodieren
                 input(SOURCE_AB, "S0010_ReadFromConsole"),
                 input(SOURCE_AB, "S0011_ReadPassword"),
-                input(SOURCE_AB, "S0013_Emoji"), // mit 0079,0083 ergänzen
+                input(SOURCE_OWN, "EmojiSnippet"),
                 input(SOURCE_AB, "S0014_SystemOutInColor"),
                 input(SOURCE_AB, "S0021_TerminalReset"),
                 input(SOURCE_AB, "S0022_CompactNumberFormat"),
