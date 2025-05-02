@@ -35,7 +35,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0021_TerminalReset"),
                 input(SOURCE_AB, "S0022_CompactNumberFormat"),
                 input(SOURCE_AB, "S0023_UnderscoresInNumbers"),
-                input(SOURCE_AB, "S0015_BuiltInLogger"), // evtl mit 0078 ergänzen
+                input(SOURCE_OWN, "UtilLogger"),
                 input(SOURCE_AB, "S0020_Assert"),
                 input(SOURCE_AB, "S0024_FunctionalInterface"),
                 input(SOURCE_AB, "S0026_AttributeDefaultOptional"),
