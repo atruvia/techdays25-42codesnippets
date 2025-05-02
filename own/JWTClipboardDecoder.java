@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.util.Base64;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class JWTClipboardDecoder {
 

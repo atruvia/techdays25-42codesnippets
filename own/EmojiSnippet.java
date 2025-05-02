@@ -1,8 +1,7 @@
 // Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0013_Emoji.java on 2025-05-02T13:37:27.134658Z
 
 import java.util.stream.IntStream;
-import static java.lang.Character.getName;
-import static java.lang.Character.toChars;
+import java.lang.Character;
 
 public class EmojiSnippet {
 
@@ -10,12 +9,12 @@ public class EmojiSnippet {
 
     record Emoji(int codePoint) {
         String name() {
-            return getName(codePoint)
+            return Character.getName(codePoint)
                     .toLowerCase();
         }
 
         String emoji() {
-            return String.valueOf(toChars(codePoint));
+            return String.valueOf(Character.toChars(codePoint));
         }
 
         public String toString() {
