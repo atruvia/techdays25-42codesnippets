@@ -25,7 +25,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0004_Timer"),
                 input(SOURCE_AB, "S0005_ScheduledThreadPool"),
                 input(SOURCE_AB, "S0006_FileWatch"),
-                // //input(SOURCE_OWN, "Hello"), // update: own Clipboard aus Base64 dekodieren
+                input(SOURCE_OWN, "JWTClipboardDecoder"), // aus Clipboard JWT Token dekodieren
                 input(SOURCE_AB, "S0010_ReadFromConsole"),
                 input(SOURCE_AB, "S0011_ReadPassword"),
                 input(SOURCE_AB, "S0013_Emoji"), // mit 0079,0083 ergänzen
