@@ -1,0 +1,3 @@
+duke true 29
+james true 69
+rusty false 10
