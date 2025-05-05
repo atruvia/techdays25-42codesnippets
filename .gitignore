@@ -5,6 +5,7 @@
 log.file
 **/*CopyTarget.java
 **/*Copy.md
+**/.tool-versions
 
 ### Eclipse ###
 .metadata
