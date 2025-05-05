@@ -1,6 +1,5 @@
-// Copied from file:/Users/xhu1006/git/atruvia/techdays25-42codesnippets/own/EnumConstructors.java on 2025-05-05T11:52:24.618888Z
-// Inspired by https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0144_S47_EnumConstructors.java on 2025-05-02T13:37:27.944138Z
-interface S47_EnumConstructors {
+// Inspired by https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0144_EnumConstructors.java on 2025-05-02T13:37:27.944138Z
+interface EnumConstructors {
 
   public enum HttpStatus {
     OK(200, "OK"),

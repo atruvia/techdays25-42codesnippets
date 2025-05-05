@@ -65,7 +65,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0100_NicerSleep"),
                 input(SOURCE_AB, "S0100_ParsingWithScanner"),
                 input(SOURCE_AB, "S0119_1000TimesSorry"),
-                input(SOURCE_AB, "S0144_EnumConstructors"),
+                input(SOURCE_OWN, "EnumConstructors"),
                 input(SOURCE_AB, "S0148_CustomIterableForEach"),
                 input(SOURCE_AB, "S0170_Clock"));
         copy(in);
