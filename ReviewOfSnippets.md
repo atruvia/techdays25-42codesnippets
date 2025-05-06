@@ -9,4 +9,4 @@ This file contains some notes for each snippet (for presentation )
 
 ## S03_ShortestMain
 * Unnamed classes.. since java21 (as preview)
-* With java24 execute like this: ´´´java --enable-preview S03_ShortestMain.java´´´
+* With java24 execute like this: `java --enable-preview S03_ShortestMain.java`
