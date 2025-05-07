@@ -12,12 +12,16 @@ This file contains some notes for each snippet (for presentation )
 * With java24 execute like this: `java --enable-preview S03_ShortestMain.java`
 
 ## S04_MainMethodFirst
+* With java24 execute like this: `java --enable-preview S04_MainMethodFirst.java`
 * Main method (and enclosing class / interface) should be the first member of a file
 * Otherwise main method will not be found
-* Renaming enclosing class / interface to `S04_MainMethodFirst` solves the problem with Java 24 preview mode
+* Renaming enclosing class / interface to `S04_MainMethodFirst` solves the problem
+* Placing only the main method at the end of the file also solves the problem
+
+## S37_ListLastElement
+* new since Java 21
 
 ## S47_EnumConstructors
 * Enum constructors are private by default
 * They can have parameters and body
 * See HttpStatus from spring web that is a more sophisticated enumeration
- 
