@@ -1,0 +1,461 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: deployment-template
+labels:
+  template: deployment-template
+objects:
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: "konto-data"
+    spec:
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 200Mi
+      storageClassName: basiceconomy
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: konto-service
+      name: konto-service
+    spec:
+      replicas: ${{REPLICAS}}
+      selector:
+        app: konto-service
+      strategy:
+        rollingParams:
+          maxSurge: ${{MAX_SURGE}}
+          maxUnavailable: ${{MAX_UNAVAILABLE}}
+        type: Rolling
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: ${MESH_ENABLED}
+          labels:
+            category: vertriebsbank
+            app: konto-service
+            np/kontenuebersicht: provider
+            app-sys.bankenit.de/name: vertriebsbank
+            app-sys.bankenit.de/part: KonVerUms
+            its.bankenit.de/group-id: SCM000000760691
+            app-sys.bankenit.de/bc-uuid: ff5823e0-a25b-4dbc-94e1-7fc34cbd17b3
+            app-sys.bankenit.de/bc: kontenuebersicht
+            its.bankenit.de/service-id: TPL000025846402
+            app-sys.bankenit.de/stage: ${STAGE}
+        spec:
+          serviceAccount: ${APP}
+          serviceAccountName: ${APP}
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: ScheduleAnyway
+              labelSelector:
+                matchLabels:
+                  app: ${{APP}}
+          containers:
+            - name: konto-service
+              image: ${REGISTRY}/${NAMESPACE}/${APP}:${VERSION}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 8081
+                  protocol: TCP
+              readinessProbe:
+                httpGet:
+                  path: /actuator/health/readiness
+                  port: 8081
+                  scheme: HTTP
+                initialDelaySeconds: ${{READINESS_PROBE_INITIAL_DELAY}}
+                periodSeconds: 40
+                timeoutSeconds: 10
+                failureThreshold: 3
+              livenessProbe:
+                httpGet:
+                  path: /actuator/health/liveness
+                  port: 8081
+                  scheme: HTTP
+                initialDelaySeconds: ${{LIVENESS_PROBE_INITIAL_DELAY}}
+                periodSeconds: 300
+                timeoutSeconds: 10
+                failureThreshold: 3
+              resources:
+                requests:
+                  memory: ${MEMORY_REQUEST}
+                  cpu: ${CPU_REQUEST}
+                limits:
+                  memory: ${MEMORY_LIMIT}
+                  cpu: ${CPU_LIMIT}
+              volumeMounts:
+                - name: konto-data
+                  mountPath: /app/var
+                - name: kafka-stores
+                  mountPath: /mnt/kafka-stores
+                  readOnly: true
+              env:
+                - name: STAGE
+                  value: ${STAGE}
+                - name: APP_VERSION
+                  value: '${VERSION}'
+                - name: DATA_DIR
+                  value: '/data'
+                - name: LOG_LEVEL
+                  value: 'DEBUG'
+                - name: REPLICAS
+                  value: ${REPLICAS}
+                - name: JAVA_OPTS
+                  value: ${{JAVA_OPTS}}
+                - name: MESH_ENABLED
+                  value: ${MESH_ENABLED}
+                - name: SERVER_PORT
+                  value: '8081'
+                - name: SPRING_PROFILES_ACTIVE
+                  value: ${{SPRING_PROFILES_ACTIVE}}
+                - name: DB_TABLE_OWNER
+                  value: ${{DB_TABLE_OWNER}}
+                - name: DB_USERNAME
+                  value: ${{DB_USERNAME}}
+                - name: DB_SCHEMA
+                  value: ${{DB_SCHEMA}}
+                - name: SPRING_DATASOURCE_URL
+                  value: ${{SPRING_DATASOURCE_URL}}
+                - name: SPRING_DATASOURCE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: datasource-konto-password
+                      key: spring.datasource.password
+                - name: MY_POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: HTTP_PROXY
+                  value: ${HTTP_PROXY}
+                - name: http_proxy
+                  value: ${HTTP_PROXY}
+                - name: HTTPS_PROXY
+                  value: ${HTTP_PROXY}
+                - name: https_proxy
+                  value: ${HTTP_PROXY}
+                - name: no_proxy
+                  value: .cluster.local,.fiducia.de,.bankenit.de,.svc
+                - name: NO_PROXY
+                  value: .cluster.local,.fiducia.de,.bankenit.de,.svc
+                - name: SPRING_DATASOURCE_HIKARI_IDLETIMEOUT
+                  value: ${SPRING_DATASOURCE_HIKARI_IDLETIMEOUT}
+                - name: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
+                  value: ${SPRING_DATASOURCE_HIKARI_MAXLIFETIME}
+                - name: SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE
+                  value: ${SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE}
+                - name: SPRING_DATASOURCE_HIKARI_LEAKDETECTIONTHRESHOLD
+                  value: ${SPRING_DATASOURCE_HIKARI_LEAKDETECTIONTHRESHOLD}
+                - name: SPRING_DATASOURCE_HIKARI_MINIMUMIDLE
+                  value: ${SPRING_DATASOURCE_HIKARI_MINIMUMIDLE}
+                - name: SPRING_DATASOURCE_HIKARI_CONNECTIONTIMEOUT
+                  value: ${SPRING_DATASOURCE_HIKARI_CONNECTIONTIMEOUT}
+                - name: SPRING_KAFKA_SECURITY_PROTOCOL
+                  value: ${SPRING_KAFKA_SECURITY_PROTOCOL}
+                - name: SPRING_KAFKA_SSL_TRUSTSTOREPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: kafka-shredder
+                      key: truststore_password
+                - name: SPRING_KAFKA_SSL_KEYSTOREPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: kafka-shredder
+                      key: keystore_password
+                - name: SPRING_KAFKA_PROPERTIES_RETRY_BACKOFF_MS
+                  value: ${SPRING_KAFKA_PROPERTIES_RETRY_BACKOFF_MS}
+                - name: KAFKA_NUM_STREAM_THREADS
+                  value: ${KAFKA_NUM_STREAM_THREADS}
+                - name: KAFKA_NUM_GLOBAL_STORE_PARTITIONS
+                  value: ${KAFKA_NUM_GLOBAL_STORE_PARTITIONS}
+                - name: KAFKA_SCHEMA_REGISTRY_URL
+                  value: ${KAFKA_SCHEMA_REGISTRY_URL}
+                - name: KAFKA_BOOTSTRAP_SERVERS_URL
+                  value: ${KAFKA_BOOTSTRAP_SERVERS_URL}
+                - name: APP_KAFKA_CONSUMER_AUTOSTARTUP
+                  value: ${APP_KAFKA_CONSUMER_AUTOSTARTUP}
+                - name: APP_KAFKA_CONSUMER_ALLOWAUTOCREATETOPICS
+                  value: ${APP_KAFKA_CONSUMER_ALLOWAUTOCREATETOPICS}
+                - name: APP_KONTEN_SALDEN_SIMULATENETWORKLATENCY
+                  value: ${APP_KONTEN_SALDEN_SIMULATENETWORKLATENCY}
+                - name: KONTEN_BASIS_DATEN_CHUNK_SIZE
+                  value: ${KONTEN_BASIS_DATEN_CHUNK_SIZE}
+                - name: KONTEN_DETAILS_REFRESH_INTERVAL_MILLIS
+                  value: ${KONTEN_DETAILS_REFRESH_INTERVAL_MILLIS}
+                - name: KONTEN_SALDEN_TIMEOUT_MILLIS
+                  value: ${KONTEN_SALDEN_TIMEOUT_MILLIS}
+                - name: KONTEN_SALDEN_REFRESH_INTERVAL_MILLIS
+                  value: ${KONTEN_SALDEN_REFRESH_INTERVAL_MILLIS}
+                - name: KONTEN_FREMDBANK_DEFERRED_RESULT_TIMEOUT_MILLIS
+                  value: ${KONTEN_FREMDBANK_DEFERRED_RESULT_TIMEOUT_MILLIS}
+                - name: DEPOTS_SALDEN_TIMEOUT_MILLIS
+                  value: ${DEPOTS_SALDEN_TIMEOUT_MILLIS}
+                - name: DEPOTS_SALDEN_REFRESH_INTERVAL_MILLIS
+                  value: ${DEPOTS_SALDEN_REFRESH_INTERVAL_MILLIS}
+                - name: KRYPTO_SALDEN_REFRESH_INTERVAL_MILLIS
+                  value: ${KRYPTO_SALDEN_REFRESH_INTERVAL_MILLIS}
+                - name: MULTITHREADED_CONSUMER_MAX_THREADS
+                  value: ${MULTITHREADED_CONSUMER_MAX_THREADS}
+                - name: APP_KAFKA_CONTAINERCONCURRENCYAVRO
+                  value: ${APP_KAFKA_CONTAINERCONCURRENCYAVRO}
+                - name: APP_LOGGINGSERVICE_MANDATORIDS
+                  value: '${APP_LOGGINGSERVICE_MANDATORIDS}'
+                - name: APP_LOGGINGSERVICE_USERIDENTS
+                  value: '${APP_LOGGINGSERVICE_USERIDENTS}'
+                - name: JAVA_TOOL_OPTIONS
+                  value: "-Dlog4j2.formatMsgNoLookups=true"
+                - name: APP_COMMON_TOKENSERVICE_TIMEOUTMILLIS
+                  value: ${APP_COMMON_TOKENSERVICE_TIMEOUTMILLIS}
+                - name: APP_PROFILSTEUERUNG_INDIVIDUAL
+                  value: ${APP_PROFILSTEUERUNG_INDIVIDUAL}
+                - name: SPIN_BAP_SERVICEDISCOVERY_URL
+                  value: ${SPIN_BAP_SERVICEDISCOVERY_URL}
+          volumes:
+            - name: konto-data
+              persistentVolumeClaim:
+                claimName: konto-data
+            - name: kafka-stores
+              secret:
+                secretName: kafka-shredder
+                items:
+                  - key: keystore_jks
+                    path: keystore.jks
+                  - key: truststore_jks
+                    path: truststore.jks
+  - apiVersion: policy/v1
+    kind: PodDisruptionBudget
+    metadata:
+      name: ${APP}-pdb
+    spec:
+      maxUnavailable: 50%
+      selector:
+        matchLabels:
+          app: ${{APP}}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: konto-service
+        monitored: prometheus
+        portal-service-registry.bankenit.de/service-type: portal-service
+      annotations:
+        portal-service-registry.bankenit.de/service-tags: publicRoutes=/**
+        portal-service-registry.bankenit.de/registration-name: ${APP}
+      name: konto-service
+    spec:
+      selector:
+        app: konto-service
+      ports:
+        - name: http-web
+          protocol: TCP
+          port: 80
+          targetPort: 8081
+        - name: http-deprecated
+          protocol: TCP
+          port: 8081
+          targetPort: 8081
+  - apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: ${APP}
+parameters:
+  - name: NAMESPACE
+    required: true
+  - name: VERSION
+    required: true
+  - name: REGISTRY
+    required: true
+  - name: MONITOR_API_VERSION
+  - name: CLUSTER
+  - name: STAGE
+  - name: APP
+    required: true
+    value: konto-service
+  - name: REPLICAS
+    displayName: Replicas.
+    description: Replicas of the application to run.
+    required: true
+  - name: MAX_SURGE
+    displayName: maxSurge.
+    description: Max Pods to be over Replicas.
+    value: "2"
+    required: true
+  - name: MAX_UNAVAILABLE
+    displayName: maxUnavailable.
+    description: Max Pods to be under Replicas.
+    value: "0"
+    required: true
+  - name: SPRING_PROFILES_ACTIVE
+    displayName: Spring profile.
+    description: The current Spring profile.
+    required: true
+  - name: JAVA_OPTS
+    displayName: JAVA_OPTS
+    required: false
+  - name: MESH_ENABLED
+    displayName: MESH_ENABLED
+    value: 'false'
+  - name: HTTP_PROXY
+    displayName: The http and https proxy
+    value: http://server-proxy.pka.bankenit.de:8080
+    required: true
+  - name: MEMORY_LIMIT
+    displayName: Memory Limit
+    value: "10Gi"
+    required: true
+  - name: MEMORY_REQUEST
+    displayName: Memory Request
+    value: "10Gi"
+    required: true
+  - name: CPU_LIMIT
+    displayName: CPU Limit
+    value: "5"
+    required: true
+  - name: CPU_REQUEST
+    displayName: CPU Request
+    value: "1"
+    required: true
+  - name: LIVENESS_PROBE_INITIAL_DELAY
+    displayName: LivenessProbe initial delay
+    value: "60"
+    required: false
+  - name: READINESS_PROBE_INITIAL_DELAY
+    displayName: ReadynessProbe initial delay
+    value: "60"
+    required: false
+  - name: DB_TABLE_OWNER
+    displayName: DB_TABLE_OWNER
+    required: false
+  - name: DB_USERNAME
+    displayName: DB_USERNAME
+    required: false
+  - name: DB_SCHEMA
+    displayName: DB_SCHEMA
+    required: false
+  - name: SPRING_DATASOURCE_URL
+    displayName: SPRING_DATASOURCE_URL
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_IDLETIMEOUT
+    displayName: SPRING_DATASOURCE_HIKARI_IDLETIMEOUT
+    value: "120000"
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
+    displayName: SPRING_DATASOURCE_HIKARI_MAXLIFETIME
+    value: "1800000"
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE
+    displayName: SPRING_DATASOURCE_HIKARI_MAXIMUMPOOLSIZE
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_LEAKDETECTIONTHRESHOLD
+    displayName: SPRING_DATASOURCE_HIKARI_LEAKDETECTIONTHRESHOLD
+    value: "3000"
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_MINIMUMIDLE
+    displayName: SPRING_DATASOURCE_HIKARI_MINIMUMIDLE
+    value: "1"
+    required: true
+  - name: SPRING_DATASOURCE_HIKARI_CONNECTIONTIMEOUT
+    displayName: SPRING_DATASOURCE_HIKARI_CONNECTIONTIMEOUT
+    value: "3000"
+    required: true
+  - name: SPRING_KAFKA_SECURITY_PROTOCOL
+    displayName: SPRING_KAFKA_SECURITY_PROTOCOL
+    value: "SSL"
+    required: true
+  - name: SPRING_KAFKA_PROPERTIES_RETRY_BACKOFF_MS
+    displayName: SPRING_KAFKA_PROPERTIES_RETRY_BACKOFF_MS
+    value: "1000"
+    required: true
+  - name: KAFKA_NUM_STREAM_THREADS
+    displayName: Anzahl der Stream Threads pro Kafka Streams Application
+    value: "6"
+    required: false
+  - name: KAFKA_NUM_GLOBAL_STORE_PARTITIONS
+    displayName: Anzahl der Partitionen des Global Store Source- / Changelog Topics
+    value: "6"
+    required: true
+  - name: KAFKA_SCHEMA_REGISTRY_URL
+    displayName: Repnest Schema Registry URL
+    value: "http://repnest-schemaregistry-service.repnest-${STAGE}.svc.cluster.local:8081"
+    required: false
+  - name: KAFKA_BOOTSTRAP_SERVERS_URL
+    displayName: Repnest Bootstrap Servers URL
+    value: "repnest-kafka-kafka-bootstrap.repnest-${STAGE}.svc.cluster.local:9093"
+    required: false
+  - name: APP_KAFKA_CONSUMER_AUTOSTARTUP
+    displayName: APP_KAFKA_CONSUMER_AUTOSTARTUP
+    value: "true"
+    required: false
+  - name: APP_KAFKA_CONSUMER_ALLOWAUTOCREATETOPICS
+    displayName: APP_KAFKA_CONSUMER_ALLOWAUTOCREATETOPICS
+    value: "false"
+    required: true
+  - name: APP_KONTEN_SALDEN_SIMULATENETWORKLATENCY
+    displayName: APP_KONTEN_SALDEN_SIMULATENETWORKLATENCY
+    description: NUR FUER TESTZWECKE - Wenn Flag auf true, dann werden die Anfragen an den Saldenservice künstlich verzögert, um Timeouts zu provozieren
+    value: "false"
+    required: false
+  - name: KONTEN_BASIS_DATEN_CHUNK_SIZE
+    displayName: KONTEN_BASIS_DATEN_CHUNK_SIZE
+    value: "100"
+    required: true
+  - name: KONTEN_DETAILS_REFRESH_INTERVAL_MILLIS
+    displayName: KONTEN_DETAILS_REFRESH_INTERVAL_MILLIS
+    value: "600000"
+    required: false
+  - name: KONTEN_SALDEN_TIMEOUT_MILLIS
+    displayName: KONTEN_SALDEN_TIMEOUT_MILLIS
+    value: "3000"
+    required: false
+  - name: KONTEN_SALDEN_REFRESH_INTERVAL_MILLIS
+    displayName: KONTEN_SALDEN_REFRESH_INTERVAL_MILLIS
+    value: "10000"
+    required: false
+  - name: DEPOTS_SALDEN_TIMEOUT_MILLIS
+    displayName: DEPOTS_SALDEN_TIMEOUT_MILLIS
+    value: "3000"
+    required: false
+  - name: DEPOTS_SALDEN_REFRESH_INTERVAL_MILLIS
+    displayName: DEPOTS_SALDEN_REFRESH_INTERVAL_MILLIS
+    value: "600000"
+    required: false
+  - name: KONTEN_FREMDBANK_DEFERRED_RESULT_TIMEOUT_MILLIS
+    displayName: KONTEN_FREMDBANK_DEFERRED_RESULT_TIMEOUT_MILLIS
+    value: "3000"
+    required: false
+  - name: KRYPTO_SALDEN_REFRESH_INTERVAL_MILLIS
+    displayName: KRYPTO_SALDEN_REFRESH_INTERVAL_MILLIS
+    value: "300000"
+    required: false
+  - name: MULTITHREADED_CONSUMER_MAX_THREADS
+    displayName: MULTITHREADED_CONSUMER_MAX_THREADS
+    value: "20"
+    required: true
+  - name: APP_KAFKA_CONTAINERCONCURRENCYAVRO
+    displayName: APP_KAFKA_CONTAINERCONCURRENCYAVRO
+    value: "3"
+    required: false
+  - name: APP_LOGGINGSERVICE_MANDATORIDS
+    displayName: APP_LOGGINGSERVICE_MANDATORIDS
+    description: Schränkt den Logging-Service auf die angegebenen Mandanten ein
+    required: false
+  - name: APP_LOGGINGSERVICE_USERIDENTS
+    displayName: APP_LOGGINGSERVICE_USERIDENTS
+    description: Schränkt den Logging-Service auf die angegebenen User ein
+    required: false
+  - name: APP_COMMON_TOKENSERVICE_TIMEOUTMILLIS
+    displayName: APP_COMMON_TOKENSERVICE_TIMEOUTMILLIS
+    description: Timeout of token service
+    value: "4000"
+    required: false
+  - name: APP_PROFILSTEUERUNG_INDIVIDUAL
+    displayName: APP_PROFILSTEUERUNG_INDIVIDUAL
+    description: Release toggle for individual profiles
+    value: "false"
+    required: false
+  - name: SPIN_BAP_SERVICEDISCOVERY_URL
+    required: true

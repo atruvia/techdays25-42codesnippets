@@ -1,3 +1,4 @@
+// Copied from file:/Users/xhu1006/git/atruvia/techdays25-42codesnippets/own/MultiClipboard.java on 2025-05-13T08:47:33.342612Z
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.GridLayout;
@@ -13,11 +14,11 @@ import java.awt.event.WindowEvent;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class MultiClipboard {
+public class S51_MultiClipboard {
     private Label[] labels = new Label[10];
 
     public void main() {
-        new MultiClipboard().show();
+        new S51_MultiClipboard().show();
     }
 
     void show() {

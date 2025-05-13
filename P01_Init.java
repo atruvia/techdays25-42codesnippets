@@ -67,7 +67,10 @@ interface P01_Init {
                 input(SOURCE_AB, "S0119_1000TimesSorry"),
                 input(SOURCE_OWN, "EnumConstructors"),
                 input(SOURCE_AB, "S0148_CustomIterableForEach"),
-                input(SOURCE_AB, "S0170_Clock"));
+                input(SOURCE_AB, "S0170_Clock"),
+                input(SOURCE_OWN, "OpenShiftTemplateValidator"),
+                input(SOURCE_OWN, "MultiClipboard"),
+                input(SOURCE_OWN, "JWTClipboardWatcher"));
         copy(in);
     }
 
