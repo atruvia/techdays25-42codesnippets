@@ -18,6 +18,49 @@ This file contains some notes for each snippet (for presentation )
 * Renaming enclosing class / interface to `S04_MainMethodFirst` solves the problem
 * Placing only the main method at the end of the file also solves the problem
 
+## S05_Timer
+* Simple timer & timertask
+* unit in milliseconds
+
+## S06_ScheduledThreadPool
+* Executer with more readable interval config
+
+## S07_FileWatch
+* Watch for new file, and continue 
+
+## S08_JWTClipboardDecoder
+* Read your clipboard and (try to ) decode the JWT within.
+
+## S09_ReadFromConsole
+* Read from console..
+
+## S10_ReadPassword
+* Read a password form console
+
+## S11_Emojis 
+* Emojis can also be used on console
+
+## S12_SystemOutlnColor
+* Shell coloring can also be used
+
+## S13_TerminalReset
+* Like color but other terminal control sequence
+
+## S14 CompactNumberFormat
+* Get Numbers easy readable.. but it does round numbers!
+
+## S15 UnderScoresInNumbers
+
+## S16 UtilLogger
+* Build-in simple logger 
+* Snippet print the defaulf config for you jre
+* could be overwritten bei own log config file and `java -Djava.util.logging.config.file=myloggingconfig.properties S15_UtilLogger.java`
+
+## S17_Asserts
+* oldie but goldie
+
+
+
 ## S37_ListLastElement
 * new since Java 21
 

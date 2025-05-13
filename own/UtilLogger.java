@@ -18,6 +18,8 @@ public class UtilLogger {
         log.log(Level.INFO, "hello {0}", "Duke");
         log.log(Level.INFO, "----------------");
 
+        System.in.read();
+
         var javaHome = System.getProperty("java.home");
         var path = Path.of(javaHome, "conf", "logging.properties");
         var config = Files.readString(path);

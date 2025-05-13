@@ -1,7 +1,8 @@
-// Copied from file:/Users/xcg6892/git/_atruvia-other/techdays25-42codesnippets/own/EmojiSnippet.java on 2025-05-02T19:28:31.534605Z
+// Copied from file:/Users/xcg6892/git/_atruvia-other/techdays25-42codesnippets/own/EmojiSnippet.java on 2025-05-13T18:04:31.642708Z
 // Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0013_Emoji.java on 2025-05-02T13:37:27.134658Z
 
 import java.util.stream.IntStream;
+import java.io.IOException;
 import java.lang.Character;
 
 public class S11_EmojiSnippet {
@@ -23,7 +24,7 @@ public class S11_EmojiSnippet {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println(ROCKET);
 
         // from
@@ -34,6 +35,8 @@ public class S11_EmojiSnippet {
                 .mapToObj(Character::toChars)
                 .map(String::valueOf)
                 .forEach(System.out::print);
+
+        System.in.read();
 
         // from
         // https://github.com/AdamBien/best-of-java-shorts/blob/main/S0083_PrintEmojisWithName.java
