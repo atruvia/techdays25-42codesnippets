@@ -59,6 +59,32 @@ This file contains some notes for each snippet (for presentation )
 ## S17_Asserts
 * oldie but goldie
 
+## S18_FunctionalInterface
+* annotation advised compiler to look for a single method
+* a compiler function (not a runtime check)
+
+## S19_AttributeDefaultOptional
+* Null check and default value with optional
+
+## S20_Ternary
+* Null check and default value with ternary operator
+
+## S21_ObjectsPreconditions
+* Null check with Object.require..
+
+## S22_Formatted
+* format message with parameter
+
+## S23_PositionInFormatted
+* format message with parameter AND index
+
+## S24_CreateTempFolder
+* creates a temp folder in temp dir (in $TMPDIR)
+
+## S25_DirectoryStream
+* can be left out
+
+
 
 
 ## S37_ListLastElement
