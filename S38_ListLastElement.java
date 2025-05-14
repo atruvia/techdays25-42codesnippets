@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0067_ListLastElement.java on 2025-05-02T19:28:36.319380Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0067_ListLastElement.java on 2025-05-14T07:01:23.873776Z
 import java.util.List;
 
 interface App {

@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0061_SwitchWithRecords.java on 2025-05-02T19:28:35.728889Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0061_SwitchWithRecords.java on 2025-05-14T07:01:23.113905Z
 interface App {
   
   record Dev(String name,int age){}

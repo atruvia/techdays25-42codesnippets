@@ -1,9 +1,9 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0032_DirectoryStream.java on 2025-05-02T19:28:34.180732Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0032_DirectoryStream.java on 2025-05-14T07:01:21.074213Z
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class S25_DirectoryStream {
+public class S26_DirectoryStream {
 
     static void createDirectories() throws IOException {
         for (int i = 0; i < 10; i++) {

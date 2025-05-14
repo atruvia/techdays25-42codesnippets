@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0063_ShorterInterfaceFields.java on 2025-05-02T19:28:35.912374Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0063_ShorterInterfaceFields.java on 2025-05-14T07:01:23.414468Z
 import java.lang.reflect.Field;
 
 interface App {

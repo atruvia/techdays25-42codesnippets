@@ -1,4 +1,4 @@
-// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0059_FetchAsyncHttpClient.java on 2025-05-02T19:28:35.531813Z
+// Copied from https://raw.githubusercontent.com/AdamBien/best-of-java-shorts/main/S0059_FetchAsyncHttpClient.java on 2025-05-14T07:01:22.693137Z
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -6,7 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-interface S33_FetchAsyncHttpClient {
+interface S34_FetchAsyncHttpClient {
 
   static void onFetch(String content) {
     System.out.println(content);
@@ -20,7 +20,7 @@ interface S33_FetchAsyncHttpClient {
        httpClient
           .sendAsync(req, BodyHandlers.ofString())
           .thenApply(HttpResponse::body)
-          .thenAccept(S33_FetchAsyncHttpClient::onFetch);
+          .thenAccept(S34_FetchAsyncHttpClient::onFetch);
     }
   }
 

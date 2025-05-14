@@ -42,6 +42,7 @@ interface P01_Init {
                 input(SOURCE_AB, "S0027_ObjectsPreconditions"),
                 input(SOURCE_AB, "S0028_Formatted"),
                 input(SOURCE_AB, "S0029_PositionInFormatted"),
+                input(SOURCE_AB, "S0070_LeadingZeroFormatting"),
                 input(SOURCE_AB, "S0030_CreateTempFolder"),
                 input(SOURCE_AB, "S0032_DirectoryStream"),
                 input(SOURCE_AB, "S0035_LinesString"),
@@ -56,7 +57,6 @@ interface P01_Init {
                 input(SOURCE_AB, "S0063_ShorterInterfaceFields"), // opt
                 input(SOURCE_AB, "S0065_ClipboardWasher"),
                 input(SOURCE_AB, "S0067_ListLastElement"), // opt
-                input(SOURCE_AB, "S0070_LeadingZeroFormatting"),
                 input(SOURCE_AB, "S0071_CloseIOStreams"), // opt
                 input(SOURCE_AB, "S0084_ReadingIntStreams"),
                 input(SOURCE_AB, "S0100_EasyFiles"),
